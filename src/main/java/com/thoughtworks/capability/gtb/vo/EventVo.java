@@ -1,7 +1,9 @@
 package com.thoughtworks.capability.gtb.vo;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -34,8 +36,8 @@ public class EventVo {
   private String name;
   private EventType type;
   @JsonSerialize(using = LocalDateTimeSerializer.class)
-//  @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
+ @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+  //@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss:SSS")
   private LocalDateTime time;
 
   @JsonUnwrapped
@@ -63,8 +65,8 @@ public class EventVo {
 
     @Override
     public LocalDateTime deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-
-      return null;
+      Long timestamp = Long.parseLong(p.getText());
+      return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
     }
 
 
